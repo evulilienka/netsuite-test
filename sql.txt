@@ -1,0 +1,47 @@
+--creates tables
+create table EMPLOYEES(EMPID int, NAME str, SUPERVISOR int, LOCATION str, SALARY str);
+
+insert into EMPLOYEES values(34, 'Amy', null, 'NY', 110000);
+insert into EMPLOYEES values(17, 'Ben', 34, 'TN', 75000);
+insert into EMPLOYEES values(5, 'Chris', 34, 'TN', 80000);
+insert into EMPLOYEES values(10, 'Don', 5, 'HI', 100000);
+
+create table BONUS(EMPID int, NBONUS int);
+insert into BONUS values(17, 5000);
+insert into BONUS values(10, 2000);
+insert into BONUS values(34, 5000);
+
+--shows tables
+select * from EMPLOYEES;
+select * from BONUS;
+
+--a task
+select e.NAME,m.NAME, bonus.nbonus
+from 
+(EMPLOYEES e left join EMPLOYEES m) inner join BONUS
+on m.EMPID = e.SUPERVISOR 
+and e.EMPID = BONUS.EMPID 
+and bonus.nbonus > 2000;
+
+--b task
+select EMPLOYEES.NAME,max(EMPLOYEES.SALARY), BONUS.NBONUS, EMPLOYEES.SALARY + BONUS.NBONUS
+from EMPLOYEES inner join BONUS
+group by EMPLOYEES.LOCATION;
+
+--creates new table NEW_SUPERVISOR
+CREATE TABLE NEW_SUPERVISOR(EMPID INT, SUPERVISOR INT);
+INSERT INTO NEW_SUPERVISOR VALUES(12, 34);
+INSERT INTO NEW_SUPERVISOR VALUES(13, 34);
+INSERT INTO NEW_SUPERVISOR VALUES(10, 34);
+
+--c task
+update EMPLOYEES
+set SUPERVISOR = (select NEW_SUPERVISOR.supervisor
+                 from NEW_SUPERVISOR
+                 WHERE NEW_SUPERVISOR.empid = EMPLOYEES.empid)
+where EXISTS
+(
+  SELECT *
+  FROM NEW_SUPERVISOR
+  WHERE NEW_SUPERVISOR.empid = EMPLOYEES.empid
+  )
