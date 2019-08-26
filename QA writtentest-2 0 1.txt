@@ -67,6 +67,13 @@ Solution template:
 
 		occurences++;
 	}
+
+	// If last element is most frequent 
+       	if (occurences > occurenceMax) 
+       	{ 
+         	occurenceMax = occurences; 
+           	occurenceMaxNum = values[values.length -1]; 
+       	}  
 		
 	//returns -1 if there are no duplicates
 	if (occurenceMax < 2)
@@ -198,7 +205,53 @@ Now implement the solution to QUESTION 1 using any approach (in any language) th
 is the most suitable for this kind of task. Consider this question as a "free-style"
 discipline and show your best!
 
-    // enter your code here
+	public static int findMostFrequentDuplicateValue2(int[] values)
+    	{
+		//checks if array is non-empty
+		if (values.length == 0)
+			return -1;
+
+		// Insert all elements in hash
+        	Map<Integer, Integer> valuesMap = new HashMap<Integer, Integer>();
+
+		for(int i = 0; i < values.length; i++)
+        	{
+       			int key = values[i];
+       
+		     	if(valuesMap.containsKey(key))
+       		    	{
+	               		int frequency = valuesMap.get(key);
+	               		frequency++;
+	               		valuesMap.put(key, frequency);
+	            	}
+	       		else
+	       		{	
+	               		valuesMap.put(key, 1);
+	       		}
+	      	}
+
+		// find max frequency.        	
+		int occurenceMax = 0; 
+		int occurenceMaxNum = -1;
+
+	       	for(Map.Entry<Integer, Integer> entry : valuesMap.entrySet())
+	        {
+	            	if (occurenceMax < entry.getValue())
+	           	{
+	               		occurenceMaxNum = entry.getKey();
+	               		occurenceMax = entry.getValue();
+	      		}
+	       	}
+
+		//returns -1 if there are no duplicates
+		if (occurenceMax < 2)
+			return -1;
+
+		return occurenceMaxNum;
+	}
+
 
 Questions (please answer these):
 1. What approach (and language) you chose and why?
+I chose approach which is using hashmap that stores values along with their frequencies. 
+After creating hashmap and counting frequencies it is easy to loop through the hashmap and find the most frequent value.

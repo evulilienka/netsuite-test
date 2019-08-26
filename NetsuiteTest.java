@@ -1,15 +1,20 @@
+import java.util.HashMap; 
+import java.util.Map; 
+import java.util.Map.Entry; 
+
 class NetsuiteTest {
 	
 	public static void main (String args []) {
-		int[] values  = new int[]{1, 2, 3, 4, 4, 4, 4, 8, 8, 8, 9, 9, 9, 9};
+		int[] values  = new int[]{1, 2, 3, 4, 4, 8, 8, 8, 9, 9, 9};
 		//int [] values = new int[]{};
 		int frequentDuplicate = findMostFrequentDuplicateValue(values);
-		//int randomValue = (int)(Math.random() * 100);
-		int randomValue = 2;
+		int randomValue = (int)(Math.random() * 100);
+		//int randomValue = 2;
 		if (frequentDuplicate != -1)
 			System.out.println ("The most frequent duplicate value in given array is " + frequentDuplicate + ".");
 	        else
 			System.out.println ("Wrong input or no duplicates in array.");	
+		System.out.println ("Result for other method: " + findMostFrequentDuplicateValue2(values));
 
 		System.out.println ("Approximation of a = " + randomValue + " is " + square_root(randomValue,1e-6));
 	}
@@ -42,6 +47,13 @@ class NetsuiteTest {
 
 			occurences++;
 		}
+
+		// If last element is most frequent 
+        	if (occurences > occurenceMax) 
+        	{ 
+            		occurenceMax = occurences; 
+            		occurenceMaxNum = values[values.length -1]; 
+        	}  
 		
 		//returns -1 if there are no duplicates
 		if (occurenceMax < 2)
@@ -67,4 +79,50 @@ class NetsuiteTest {
 		return x;
 
 	}
-} 
+	
+	//more simple method for finding the most frequent value in array
+	public static int findMostFrequentDuplicateValue2(int[] values)
+    	{
+		//checks if array is non-empty
+		if (values.length == 0)
+			return -1;
+
+		// Insert all elements in hash
+        	Map<Integer, Integer> valuesMap = new HashMap<Integer, Integer>();
+
+		for(int i = 0; i < values.length; i++)
+        	{
+            		int key = values[i];
+            		if(valuesMap.containsKey(key))
+            		{
+                		int frequency = valuesMap.get(key);
+                		frequency++;
+                		valuesMap.put(key, frequency);
+            		}
+            		else
+            		{	
+                		valuesMap.put(key, 1);
+           		}
+        	}
+
+		// find max frequency.
+        	int occurenceMax = 0; 
+		int occurenceMaxNum = -1;
+
+        	for(Map.Entry<Integer, Integer> entry : valuesMap.entrySet())
+        	{
+            		if (occurenceMax < entry.getValue())
+            		{
+                		occurenceMaxNum = entry.getKey();
+                		occurenceMax = entry.getValue();
+           		 }
+       		}
+
+	//returns -1 if there are no duplicates
+	if (occurenceMax < 2)
+		return -1;
+
+	return occurenceMaxNum;
+    }
+}
+
